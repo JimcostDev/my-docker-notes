@@ -1,6 +1,5 @@
 # 🐳 Mi Guía Completa de Docker
 
-*Última actualización: Septiembre 2025*
 
 ## 📋 Tabla de Contenidos
 - [Conceptos Básicos](#-conceptos-básicos)
