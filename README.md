@@ -131,6 +131,9 @@ docker restart nombre-contenedor
 # Pausar/reanudar contenedor
 docker pause nombre-contenedor
 docker unpause nombre-contenedor
+
+# Muestra información detallada de un contenedor (también acepta ID)
+docker inspect nombre-del-contenedor
 ```
 
 ### Eliminar contenedores
