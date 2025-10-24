@@ -11,6 +11,7 @@
 - [Dockerfile](#-dockerfile)
 - [Comandos de Limpieza](#️-comandos-de-limpieza)
 - [Tips y Mejores Prácticas](#-tips-y-mejores-prácticas)
+- [Publicación de imagenes en Docker Hub](./PUBLISH_DOCKER_IMAGE.md)
 
 ---
 
