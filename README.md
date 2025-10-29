@@ -1,6 +1,5 @@
 # 🐳 Mi Guía Completa de Docker
 
-
 ## 📋 Tabla de Contenidos
 - [Conceptos Básicos](#-conceptos-básicos)
 - [Imágenes](#️-gestión-de-imágenes)
@@ -12,7 +11,7 @@
 - [Comandos de Limpieza](#️-comandos-de-limpieza)
 - [Tips y Mejores Prácticas](#-tips-y-mejores-prácticas)
 - [Publicación de imagenes en Docker Hub](./PUBLISH_DOCKER_IMAGE.md)
-- [Exportación e importación de imágenes](./DOCKER_EXPORT_IMPORT.md )
+- [Exportación e importación de imágenes](./DOCKER_EXPORT_IMPORT.md)
 
 ---
 
@@ -30,6 +29,11 @@ Docker es una plataforma que permite crear, desplegar y ejecutar aplicaciones en
 ---
 
 ## 🖼️ Gestión de Imágenes
+
+### ¿Qué son las imágenes?
+Las imágenes son plantillas de solo lectura que contienen todo lo necesario para ejecutar una aplicación: código, runtime, librerías, variables de entorno y archivos de configuración. Son como "fotografías" o "instantáneas" de un sistema que puedes usar para crear múltiples contenedores idénticos.
+
+Una imagen se construye en capas, donde cada instrucción en el Dockerfile crea una nueva capa. Esto permite reutilizar capas entre diferentes imágenes y hace más eficiente el almacenamiento.
 
 ### Construir una imagen
 ```bash
@@ -86,6 +90,11 @@ docker rmi $(docker images -q)
 ---
 
 ## 📦 Gestión de Contenedores
+
+### ¿Qué son los contenedores?
+Los contenedores son instancias en ejecución de una imagen Docker. Son entornos aislados y ligeros que comparten el kernel del sistema operativo host pero tienen su propio sistema de archivos, procesos y red. A diferencia de las máquinas virtuales, los contenedores son mucho más rápidos de iniciar y consumen menos recursos porque no necesitan un sistema operativo completo.
+
+Piensa en la imagen como una "clase" y el contenedor como un "objeto" o "instancia" de esa clase. Puedes crear múltiples contenedores a partir de la misma imagen, cada uno ejecutándose de forma independiente.
 
 ### Ejecutar contenedores
 ```bash
@@ -157,6 +166,11 @@ docker rm $(docker ps -aq)
 
 ## 🌐 Redes
 
+### ¿Qué son las redes en Docker?
+Las redes en Docker permiten que los contenedores se comuniquen entre sí y con el mundo exterior. Por defecto, Docker crea tres redes: bridge (la predeterminada para contenedores), host (comparte la red del host) y none (sin red).
+
+Cuando creas redes personalizadas, los contenedores conectados a ellas pueden comunicarse usando sus nombres como hostnames, lo que facilita la configuración de aplicaciones multi-contenedor. Las redes también proporcionan aislamiento, ya que los contenedores en diferentes redes no pueden comunicarse entre sí a menos que lo especifiques explícitamente.
+
 ### Gestión de redes
 ```bash
 # Listar redes
@@ -187,6 +201,16 @@ docker run --network mi-red --name app miapp:local
 ---
 
 ## 💾 Volúmenes
+
+### ¿Qué son los volúmenes?
+Los volúmenes son el mecanismo preferido de Docker para persistir datos generados y utilizados por contenedores. Mientras que el sistema de archivos de un contenedor es temporal y se pierde cuando el contenedor se elimina, los volúmenes existen fuera del ciclo de vida del contenedor.
+
+Hay tres formas principales de montar datos en contenedores:
+- **Volúmenes nombrados**: Gestionados completamente por Docker, ideales para datos de aplicación
+- **Bind mounts**: Montan una carpeta específica del host, útiles para desarrollo
+- **tmpfs mounts**: Datos en memoria, desaparecen al detener el contenedor
+
+Los volúmenes son más eficientes y seguros que los bind mounts, y son la opción recomendada para entornos de producción.
 
 ### Tipos de almacenamiento
 ```bash
@@ -220,6 +244,17 @@ docker volume prune
 ---
 
 ## 🐙 Docker Compose
+
+### ¿Qué es Docker Compose?
+Docker Compose es una herramienta para definir y ejecutar aplicaciones Docker multi-contenedor. En lugar de ejecutar múltiples comandos `docker run` con muchas opciones, defines toda tu aplicación en un archivo YAML declarativo llamado `docker-compose.yml`.
+
+Con Compose puedes:
+- Definir múltiples servicios (contenedores) y sus relaciones
+- Configurar redes y volúmenes compartidos
+- Gestionar el orden de inicio de los servicios
+- Levantar o detener toda tu aplicación con un solo comando
+
+Es especialmente útil para entornos de desarrollo donde necesitas ejecutar simultáneamente una aplicación web, base de datos, cache, etc. Compose se encarga de crear las redes, volúmenes y contenedores automáticamente.
 
 ### Archivo docker-compose.yml básico
 ```yaml
@@ -279,6 +314,17 @@ docker-compose exec web /bin/bash
 ---
 
 ## 📄 Dockerfile
+
+### ¿Qué es un Dockerfile?
+Un Dockerfile es un archivo de texto que contiene una serie de instrucciones para construir una imagen Docker automáticamente. Cada instrucción crea una nueva capa en la imagen final.
+
+Piensa en el Dockerfile como una "receta" que describe paso a paso cómo preparar el entorno de tu aplicación: qué sistema operativo base usar, qué dependencias instalar, dónde copiar tu código, qué puertos exponer y cómo ejecutar la aplicación.
+
+Los Dockerfiles permiten:
+- Automatizar y documentar el proceso de creación de imágenes
+- Mantener consistencia entre entornos (desarrollo, testing, producción)
+- Versionar la configuración de tu infraestructura como código
+- Compartir y reproducir entornos fácilmente
 
 ### Estructura básica
 ```dockerfile
@@ -340,6 +386,15 @@ CMD ["nginx", "-g", "daemon off;"]
 ---
 
 ## 🗑️ Comandos de Limpieza
+
+### ¿Por qué limpiar Docker?
+Con el tiempo, Docker acumula imágenes antiguas, contenedores detenidos, volúmenes sin usar y cache de construcción que ocupan espacio en disco. Los comandos de limpieza te ayudan a:
+- Liberar espacio en disco
+- Mantener tu entorno organizado
+- Eliminar recursos que ya no necesitas
+- Mejorar el rendimiento general
+
+Es una buena práctica ejecutar limpiezas periódicas, especialmente en entornos de desarrollo donde construyes y pruebas muchas imágenes diferentes.
 
 ### Limpieza general
 ```bash
@@ -479,7 +534,3 @@ docker stats  # Ver recursos
 - [Docker Hub](https://hub.docker.com/)
 - [Dockerfile reference](https://docs.docker.com/engine/reference/builder/)
 - [Docker Compose reference](https://docs.docker.com/compose/compose-file/)
-
-
-
-
