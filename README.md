@@ -294,6 +294,9 @@ docker-compose up -d  # En segundo plano
 # Construir y levantar
 docker-compose up --build
 
+# Ver contenedores activos del compose
+docker-compose ps
+
 # Ver logs
 docker-compose logs
 docker-compose logs nombre-servicio
