@@ -258,31 +258,49 @@ Es especialmente útil para entornos de desarrollo donde necesitas ejecutar simu
 
 ### Archivo docker-compose.yml básico
 ```yaml
-version: '3.8'
-
 services:
-  web:
-    build: .
+  webapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: astro_webapp
     ports:
-      - "8000:8000"
-    environment:
-      - NODE_ENV=production
+      - "8080:80"
+    restart: unless-stopped
+
+  nginx-exporter:
+    image: nginx/nginx-prometheus-exporter:latest
+    container_name: nginx_exporter
+    command:
+      - "-nginx.scrape-uri=http://webapp:80/stub_status"
+    ports:
+      - "9113:9113"
     depends_on:
-      - db
-    volumes:
-      - ./src:/app/src
+      - webapp
+    restart: unless-stopped
 
-  db:
-    image: postgres:15
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    depends_on:
+      - nginx-exporter
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
     environment:
-      POSTGRES_DB: miapp
-      POSTGRES_USER: usuario
-      POSTGRES_PASSWORD: contraseña
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-volumes:
-  postgres_data:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - prometheus
+    restart: unless-stopped
 ```
 
 ### Comandos de Docker Compose
